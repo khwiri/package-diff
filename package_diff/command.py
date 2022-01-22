@@ -3,7 +3,6 @@ from typing import Optional
 from pathlib import Path as PathLibPath
 from functools import reduce
 
-from click import File
 from click import Path as ClickPath
 from click import group
 from click import option

@@ -1,4 +1,3 @@
-import os
 import json
 from enum import Enum
 from string import Template
@@ -27,10 +26,10 @@ class Package:
         self.name    = name
         self.version = Version(version.lstrip('='))
 
-    def __eq__(self, o):
+    def __eq__(self, o): # pylint: disable=invalid-name
         return self.name == o.name
 
-    def __lt__(self, o):
+    def __lt__(self, o): # pylint: disable=invalid-name
         return self.name < o.name
 
     def __hash__(self):
@@ -119,7 +118,7 @@ def render_package_change_states(pipfile :Path, add_template :str, remove_templa
     package_states          = list(get_package_change_states(pipfile))
     package_states_sorted   = sorted(package_states, key=lambda x: x.package)
     package_states_rendered = map(
-        lambda x: render_package_change_state_(x),
+        render_package_change_state_,
         package_states_sorted
     )
 
