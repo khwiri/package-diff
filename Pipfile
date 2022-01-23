@@ -12,6 +12,7 @@ pylint = "*"
 [packages]
 rich = "*"
 click = "*"
+semver = "*"
 
 [requires]
 python_version = "3.9"

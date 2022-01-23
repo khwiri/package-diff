@@ -11,7 +11,7 @@ from subprocess import check_output
 from collections import defaultdict
 from dataclasses import dataclass
 
-from pkg_resources.extern.packaging.version import Version
+from .version import Version
 
 
 class State(Enum):
@@ -20,16 +20,15 @@ class State(Enum):
     UPGRADE   = 3
     DOWNGRADE = 4
 
-
 class Package:
     def __init__(self, name :str, version :str):
         self.name    = name
-        self.version = Version(version.lstrip('='))
+        self.version = Version(version)
 
-    def __eq__(self, o): # pylint: disable=invalid-name
+    def __eq__(self, o :'Package'):
         return self.name == o.name
 
-    def __lt__(self, o): # pylint: disable=invalid-name
+    def __lt__(self, o :'Package'):
         return self.name < o.name
 
     def __hash__(self):

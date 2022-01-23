@@ -9,13 +9,13 @@ from pytest import MonkeyPatch
 from pytest import mark
 from pytest import param
 from _pytest.mark.structures import ParameterSet
-from pkg_resources.extern.packaging.version import Version
 
 from package_diff.pipfile import State
 from package_diff.pipfile import Package
 from package_diff.pipfile import PackageState
 from package_diff.pipfile import get_package_change_states
 from package_diff.pipfile import render_package_change_state
+from package_diff.version import Version
 
 
 ParamTestId       = str
@@ -99,6 +99,15 @@ PACKAGE_CHANGE_STATES_TEST_DATA :PackageChangeStatesTestData = [
         ],
     ),
 ]
+@mark.parametrize(['from_pipfile_packages', 'curr_pipfile_packages', 'expected'], convert_test_data_to_params(PACKAGE_CHANGE_STATES_TEST_DATA))
+def test_package_changes(from_pipfile_packages :FromPipfilePackages, curr_pipfile_packages :CurrPipfilePackages, expected :PackageChangeStatesExpected, monkeypatch :MonkeyPatch) -> None:
+    monkeypatch.setattr('pathlib.Path.is_file', lambda _: True)
+    monkeypatch.setattr('package_diff.pipfile.load_pipfile_lock', lambda _: dict(default=curr_pipfile_packages))
+    monkeypatch.setattr('package_diff.pipfile.load_pipfile_lock_from_git_head', lambda _: dict(default=from_pipfile_packages))
+
+    package_states = get_package_change_states(Mock())
+
+    assert list(package_states) == expected
 
 
 RenderedPackageChangeStateExpected = str
@@ -136,19 +145,6 @@ RENDER_PACKAGE_CHANGE_STATE_TEST_DATA :RenderPackageChangeStateTestData = [
         'Unknown',
     ),
 ]
-
-
-@mark.parametrize(['from_pipfile_packages', 'curr_pipfile_packages', 'expected'], convert_test_data_to_params(PACKAGE_CHANGE_STATES_TEST_DATA))
-def test_package_changes(from_pipfile_packages :FromPipfilePackages, curr_pipfile_packages :CurrPipfilePackages, expected :PackageChangeStatesExpected, monkeypatch :MonkeyPatch) -> None:
-    monkeypatch.setattr('pathlib.Path.is_file', lambda _: True)
-    monkeypatch.setattr('package_diff.pipfile.load_pipfile_lock', lambda _: dict(default=curr_pipfile_packages))
-    monkeypatch.setattr('package_diff.pipfile.load_pipfile_lock_from_git_head', lambda _: dict(default=from_pipfile_packages))
-
-    package_states = get_package_change_states(Mock())
-
-    assert list(package_states) == expected
-
-
 @mark.parametrize(['package_state', 'expected'], convert_test_data_to_params(RENDER_PACKAGE_CHANGE_STATE_TEST_DATA))
 def test_render_package_change_state(package_state :PackageState, expected) -> None:
     add_template           = '- $package (add)'
