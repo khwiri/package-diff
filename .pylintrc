@@ -80,6 +80,7 @@ confidence=
 # --disable=W".
 disable=bad-inline-option,
         deprecated-pragma,
+        duplicate-code, # Adding this because disabling blocks around duplicate code doesn't seem to be working (see: https://github.com/PyCQA/pylint/issues/214)
         file-ignored,
         line-too-long,
         locally-disabled,
