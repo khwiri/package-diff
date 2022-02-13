@@ -4,12 +4,14 @@ url = "https://pypi.org/simple"
 verify_ssl = true
 
 [dev-packages]
+ipython = "==8.0.1"
+isort = "==5.10.1"
+pytest = "==6.1.2"
 
 [packages]
-ipython = "*"
-flask = "==2.0.2"
-rich = "==10.10.0"
-pylint = "*"
+click = "==8.0.3"
+requests = "==2.26.0"
+flask = "==2.0.0"
 
 [requires]
 python_version = "3.9"
